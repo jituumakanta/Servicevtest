@@ -3,6 +3,11 @@ package com.ipvworld.servicevtest;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.widget.Toast;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class MyService extends Service {
 
@@ -24,6 +29,17 @@ public class MyService extends Service {
     /** The service is starting, due to a call to startService() */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        ExecutorService executor = Executors.newFixedThreadPool(10);//creating a pool of 5 threads
+
+        Runnable worker = new news1();
+        executor.execute(worker);
+
+        Runnable worker1 = new news2();
+        executor.execute(worker1);
+
+        executor.shutdown();
+        while (!executor.isTerminated()) {}
+        System.out.println("Finished all threads");
         return mStartMode;
     }
 
